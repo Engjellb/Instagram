@@ -5,20 +5,38 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
     public function index(User $user) {
 
-      $posts = $user->posts;
-      $profile = $user->profile;
+      $posts = Cache::rememberForever('profile.posts.' . $user->id, function () use ($user) {
+          return $user->posts;
+      });
+      $profile = Cache::rememberForever('profile.' . $user->id, function () use ($user) {
+          return $user->profile;
+      });
       $follows = (Auth::user()) ? Auth::user()->following->contains($user->id) : false;
+
+      $countPosts = Cache::rememberForever('count.posts.' . $user->id, function () use ($user) {
+              return $user->posts->count();
+          });
+      $following = Cache::rememberForever('count.following.' . $user->id, function () use ($user) {
+          return $user->following->count();
+      });
+      $followers = Cache::rememberForever('count.followers.' . $user->id, function () use ($user) {
+          return $user->profile->followers->count();
+      });
       return view('profiles.index', [
         'profile' => $profile,
          'user' => $user,
          'posts' => $posts,
-          'follows' => $follows
+          'follows' => $follows,
+          'countPosts' => $countPosts,
+          'following' => $following,
+          'followers' => $followers
         ]);
     }
 

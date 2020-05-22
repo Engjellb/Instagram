@@ -16,9 +16,9 @@
           <a href="{{ route('profiles.edit', $user->id) }}">Edit profile</a>
           @endcan
         <div class="row ml-1 mt-2">
-          <div class="pr-5"><strong class="pr-1">{{ count($posts) }}</strong>posts</div>
-          <div class="pr-5"><strong class="pr-1">{{ $user->profile->followers->count() }}</strong>followers</div>
-          <div class="pr-5"><strong class="pr-1">{{ $user->following->count() }}</strong>following</div>
+          <div class="pr-5"><strong class="pr-1">{{ $countPosts }}</strong>posts</div>
+          <div class="pr-5"><strong class="pr-1">{{ $followers }}</strong>followers</div>
+          <div class="pr-5"><strong class="pr-1">{{ $following }}</strong>following</div>
             @can('update', $user->profile)
                 <div><a href="{{ route('posts.create') }}">Add a new post</a></div>
             @endcan

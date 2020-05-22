@@ -20,10 +20,6 @@ class PostController extends Controller
       //   'upload' => 'required'
       // ]);
 
-      /*
-      Upload file to filesystem with generated
-      file name
-      */
       $imagePath = $request->file('upload')->store('images', 'public');
       $image = Image::make(public_path('storage/'.$imagePath))->fit(800,800);
       $image->save();
