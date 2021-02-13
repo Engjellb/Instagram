@@ -11,33 +11,26 @@ use Intervention\Image\Facades\Image;
 class ProfileController extends Controller
 {
     public function index(User $user) {
+      $data = [];
+//      $posts = Cache::rememberForever('profile.posts.' . $user->id, function () use ($user) {
+          $data['posts'] = $user->posts;
+//      });
+//      $profile = Cache::rememberForever('profile.' . $user->id, function () use ($user) {
+          $data['profile'] = $user->profile;
+//      });
+        $data['follows'] = (Auth::user()) ? Auth::user()->following->contains($user->id) : false;
 
-      $posts = Cache::rememberForever('profile.posts.' . $user->id, function () use ($user) {
-          return $user->posts;
-      });
-      $profile = Cache::rememberForever('profile.' . $user->id, function () use ($user) {
-          return $user->profile;
-      });
-      $follows = (Auth::user()) ? Auth::user()->following->contains($user->id) : false;
-
-      $countPosts = Cache::rememberForever('count.posts.' . $user->id, function () use ($user) {
-              return $user->posts->count();
-          });
-      $following = Cache::rememberForever('count.following.' . $user->id, function () use ($user) {
-          return $user->following->count();
-      });
-      $followers = Cache::rememberForever('count.followers.' . $user->id, function () use ($user) {
-          return $user->profile->followers->count();
-      });
-      return view('profiles.index', [
-        'profile' => $profile,
-         'user' => $user,
-         'posts' => $posts,
-          'follows' => $follows,
-          'countPosts' => $countPosts,
-          'following' => $following,
-          'followers' => $followers
-        ]);
+//      $countPosts = Cache::rememberForever('count.posts.' . $user->id, function () use ($user) {
+          $data['countPosts'] = $user->posts->count();
+//          });
+//      $following = Cache::rememberForever('count.following.' . $user->id, function () use ($user) {
+          $data['following'] = $user->following->count();
+//      });
+//      $followers = Cache::rememberForever('count.followers.' . $user->id, function () use ($user) {
+          $data['followers'] = $user->profile->followers->count();
+//      });
+//      dd($user->profile->followers->count());
+      return view('profiles.index', compact(['data', 'user']));
     }
 
     public function edit(User $user) {
