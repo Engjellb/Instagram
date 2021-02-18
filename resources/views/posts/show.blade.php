@@ -16,7 +16,27 @@
                 <div class="mt-4">
                     <a href="{{ route('profile.index', $post->user->id) }}"><span class="font-weight-bold pr-2">
                         {{ $post->user->username }}</span></a>
-                    <span>{{ $post->content }}</span>
+                    <span>{{ $post->content }}</span><br>
+                    <div style="cursor: pointer; margin-top: 10px; display: inline-block">
+                        <form action="{{ route('posts.likes.store', $post->id) }}" method="post">
+                            @csrf
+                            <like-post user-id="{{ $user->id }}" post-id="{{ $post->id }}"></like-post>
+                        </form>
+                    </div>
+                    <span style="margin-left: 8px">
+                        <span>{{ $post->likes->count() }}</span>
+                    </span>
+                    <div style="margin-top: 30px;">
+                        <span>Add a comment</span>
+                    </div>
+                    <div>
+                        <form action="{{ route('posts.comments.store', $post->id) }}" method="post">
+                            @csrf
+
+                            <input type="text" style="width: 70%" name="content_comment">
+                            <input type="submit" value="Add" class="btn btn-primary">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

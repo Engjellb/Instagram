@@ -21,6 +21,9 @@ window.Vue = require('vue');
 
 Vue.component('follow-user', require('./components/followUser.vue').default);
 
+Vue.component('like-post', require('./components/likePost.vue').default)
+
+Vue.component('open-modal', require('./components/openModal.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

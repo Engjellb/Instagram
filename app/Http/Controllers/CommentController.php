@@ -14,6 +14,15 @@ class CommentController extends Controller
         $this->middleware('auth');
     }
 
+    public function index(Post $post)
+    { 
+      $users = [];
+      foreach ($post->comments as $comment)
+        $users[] = $comment->user; 
+      
+      return ['users' => $users];
+    }
+
     public function store(Request $request, Post $post)
     {
         Comment::create([

@@ -10,27 +10,29 @@
       <div class="row d-flex flex-column">
           <div class="d-flex">
               <div><h3>{{ $user->username }}</h3></div>
-              <follow-user user-id="{{ $user->id }}" follows="{{ $follows }}"></follow-user>
+              @cannot ('update', $user->profile)
+              <follow-user user-id="{{ $user->id }}" follows="{{ $data['follows'] }}"></follow-user>
+              @endcan
           </div>
           @can ('update', $user->profile)
           <a href="{{ route('profiles.edit', $user->id) }}">Edit profile</a>
           @endcan
         <div class="row ml-1 mt-2">
-          <div class="pr-5"><strong class="pr-1">{{ $countPosts }}</strong>posts</div>
-          <div class="pr-5"><strong class="pr-1">{{ $followers }}</strong>followers</div>
-          <div class="pr-5"><strong class="pr-1">{{ $following }}</strong>following</div>
+          <div class="pr-5"><strong class="pr-1">{{ $data['countPosts'] }}</strong>posts</div>
+          <div class="pr-5"><strong class="pr-1">{{ $data['followers'] }}</strong>followers</div>
+          <div class="pr-5"><strong class="pr-1">{{ $data['following'] }}</strong>following</div>
             @can('update', $user->profile)
                 <div><a href="{{ route('posts.create') }}">Add a new post</a></div>
             @endcan
         </div>
-        <h4 class="pt-4">{{ $profile->title }}</h4>
-        <p>{{ $profile->description }}</p>
-        <a href="#"><p>{{ $profile->url }}</p></a>
+        <h4 class="pt-4">{{ $data['profile']->title }}</h4>
+        <p>{{ $data['profile']->description }}</p>
+        <a href="#"><p>{{ $data['profile']->url }}</p></a>
       </div>
     </div>
   </div>
   <div class="row d-flex flex-wrap" id="photoRow">
-    @foreach($posts as $post)
+    @foreach($data['posts'] as $post)
     <div class="col-md-4 pl-1">
         <a href="{{ route('posts.show', $post->id) }}">
             <img src="/storage/{{ $post->image }}" alt="" width="100%">

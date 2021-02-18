@@ -1,5 +1,7 @@
 <?php
 
+use App\Post;
+use App\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +16,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $user = \Illuminate\Support\Facades\Auth::user();
+    $userProfiles = [];
+  // dd($user->following);
+   foreach ($user->following as $f) {
+      $userProfiles[] = $f->user;
+   }
+   
+
+   return view('welcome', compact('userProfiles'));
+})->middleware('auth');
 
 Auth::routes(['verify' => true]);
 
@@ -36,5 +46,15 @@ Route::get('/posts/{post}', 'PostController@show')->name('posts.show');
 
 Route::post('/posts', 'PostController@store')->name('posts.store');
 
+
 Route::post('/follow/{user}', 'FollowsController@store');
 
+Route::get('/posts/{post}/likes', 'LikeController@index');
+
+Route::get('/posts/{post}/comments', 'CommentController@index');
+
+Route::post('/posts/{post}/likes', 'LikeController@store')->name('posts.likes.store');
+
+Route::post('/posts/{post}/comments', 'CommentController@store')->name('posts.comments.store');
+
+Route::get('/test', 'HomeController@test');
