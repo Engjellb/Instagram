@@ -9,6 +9,6 @@ trait UserOwner {
 
   public function getUser()
   {
-    return User::findOrFail(Auth::id());
+    return User::findOrFail(2);
   }
 }

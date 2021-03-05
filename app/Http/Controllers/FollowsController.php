@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\UserRepositoryInteface;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FollowsController extends Controller
 {
-    public function __construct()
+    private $userRepository;
+
+    public function __construct(UserRepositoryInteface $userRepository)
     {
         $this->middleware('auth');
+        $this->userRepository = $userRepository;
     }
 
-    public function store(User $user)
+    public function store($userId)
     {
-        return Auth::user()->following()->toggle($user->profile);
+        $userProfile = $this->userRepository->getUserProfile($userId);
+
+        $this->userRepository->userToggleFollowing($userProfile);
     }
 }

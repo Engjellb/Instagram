@@ -10,4 +10,8 @@ interface PostRepositoryInterface {
   public function store(Array $array);
 
   public function getPost($id);
+
+  public function getPostLikes($postId);
+
+  public function getPostComments($postId);
 }

@@ -2,33 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
-use App\Post;
+use App\Repositories\CommentRepositoryInterface;
+use App\Repositories\PostRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    public function __construct()
+    private $commentRepository;
+    private $postRepository;
+
+    public function __construct(CommentRepositoryInterface $commentRepository, 
+                                PostRepositoryInterface $postRepository)
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
+      $this->commentRepository = $commentRepository;
+      $this->postRepository = $postRepository;
     }
 
-    public function index(Post $post)
+    public function index($id)
     { 
+      $postComments = $this->postRepository->getPostComments($id);
       $users = [];
-      foreach ($post->comments as $comment)
-        $users[] = $comment->user; 
       
-      return ['users' => $users];
+      foreach ($postComments as $comment)
+        $users[] = ['user' => $this->commentRepository->getUserComment($comment), 'content' => $comment->content]; 
+      
+      return $users;
     }
 
-    public function store(Request $request, Post $post)
+    public function store(Request $request, $postId)
     {
-        Comment::create([
-            'user_id' => Auth::id(),
-            'post_id' => $post->id,
-            'content' => $request->content_comment
-        ]);
+        $array = [
+          'post_id' => $postId,
+          'content' => $request->content
+        ];
+
+        return $this->commentRepository->store($array);
     }
 }

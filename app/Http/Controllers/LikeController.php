@@ -2,40 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Like;
-use App\Post;
-use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\LikeRepositoryInterface;
+use App\Repositories\PostRepositoryInterface;
+use App\Repositories\UserRepositoryInteface;
 
 class LikeController extends Controller
 {
-    public function __construct()
+    private $likeRepository;
+    private $userRepository;
+    private $postRepository;
+
+    public function __construct(LikeRepositoryInterface $likeRepository,
+                                UserRepositoryInteface $userRepository,
+                                PostRepositoryInterface $postRepository)
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
+        $this->likeRepository = $likeRepository;
+        $this->userRepository = $userRepository;
+        $this->postRepository = $postRepository;
     }
 
-    public function index(Post $post)
+    public function index($id)
     {
-      foreach ($post->likes as $like) {
-        $users[] = User::find($like->user_id);
+      $postLikes = $this->postRepository->getPostLikes($id);
+
+      $users = [];
+      foreach ($postLikes as $postLike) {
+        $users[] = $this->userRepository->getUser($postLike->user_id);
       }
 
+      $profiles = [];
       foreach ($users as $user) {
-        $profiles[] = $user->profile;
+        $profiles[] = $this->userRepository->getUserProfile($user->id);
       }
-      
+
       return response()->json(['title' => 'Likes', 
-                          'users' => $users, 'profiles' => $profiles, 'likesCount' => $post->likes->count()]);
+                          'users' => $users, 'profiles' => $profiles, 'likesCount' => $postLikes->count()]);
     }
 
-    public function store(Request $request, Post $post)
+    public function store($id)
     {
-        $user_id = Auth::id();
+        $array = [
+          'post_id' => $id
+        ];
 
-        Like::create([
-           'user_id' => $user_id,
-           'post_id' => $post->id
-        ]);
+        return $this->likeRepository->store($array);
     }
 }
