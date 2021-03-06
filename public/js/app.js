@@ -2010,6 +2010,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['postId', 'countLikes', 'countComments'],
   mounted: function mounted() {// console.log('ok')
@@ -2048,8 +2052,9 @@ __webpack_require__.r(__webpack_exports__);
       this.title = 'Comments';
       this.defaultValues();
       axios.get('/posts/' + this.postId + '/comments').then(function (response) {
-        if (response.data.users == 0) _this2.noUsers = 'Be the first to comment';
-        response.data.users.map(function (value, key) {
+        // console.log(response.data)
+        if (response.data == 0) _this2.noUsers = 'Be the first to comment';
+        response.data.map(function (value, key) {
           _this2.usersComments.push(value);
         });
       });
@@ -37782,7 +37787,7 @@ var render = function() {
     _c(
       "span",
       {
-        staticStyle: { "margin-right": "30px" },
+        staticStyle: { "margin-right": "30px", cursor: "pointer" },
         attrs: { "data-toggle": "modal", "data-target": "#demo" + _vm.postId },
         on: { click: _vm.showLikes }
       },
@@ -37792,6 +37797,7 @@ var render = function() {
     _c(
       "span",
       {
+        staticStyle: { cursor: "pointer" },
         attrs: { "data-toggle": "modal", "data-target": "#demo" + _vm.postId },
         on: { click: _vm.showComments }
       },
@@ -37844,12 +37850,17 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm._l(_vm.usersComments, function(userComment) {
-                    return _c("div", { key: userComment.id }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(userComment.username) +
-                          "\n          "
-                      )
+                    return _c("div", { key: userComment.user.id }, [
+                      _c("div", [
+                        _c("strong", [
+                          _vm._v(_vm._s(userComment.user.username))
+                        ]),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(userComment.content))]),
+                        _vm._v(" "),
+                        _c("hr")
+                      ])
                     ])
                   }),
                   _vm._v(" "),

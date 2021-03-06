@@ -1,8 +1,8 @@
 <template>
 <div>
-  <span style="margin-right: 30px" data-toggle="modal" @click="showLikes" :data-target="'#demo' + postId">Likes: {{ likes }}</span>
+  <span style="margin-right: 30px; cursor: pointer;" data-toggle="modal" @click="showLikes" :data-target="'#demo' + postId">Likes: {{ likes }}</span>
 
-  <span data-toggle="modal" :data-target="'#demo' + postId" @click="showComments">Comments: {{ comments }}</span>
+  <span style="cursor: pointer;" data-toggle="modal" :data-target="'#demo' + postId" @click="showComments">Comments: {{ comments }}</span>
 
   <div class="modal fade" :id="'demo' + postId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -17,8 +17,12 @@
           <div v-for="user in usersLikes" :key="user.id">
             {{ user.username }}
           </div>
-          <div v-for="userComment in usersComments" :key="userComment.id">
-            {{ userComment.username }}
+          <div v-for="userComment in usersComments" :key="userComment.user.id">
+            <div>
+              <strong>{{ userComment.user.username }}</strong><br>
+              <span>{{ userComment.content }}</span>
+              <hr>
+            </div>
           </div>
           <span>{{ noUsers }}</span>
         </div>
@@ -79,10 +83,11 @@
 
         axios.get('/posts/'+ this.postId +'/comments')
               .then((response) => {
-                if (response.data.users == 0)
+                // console.log(response.data)
+                if (response.data == 0)
                   this.noUsers = 'Be the first to comment';
 
-                response.data.users.map((value, key) => {
+                response.data.map((value, key) => {
                   this.usersComments.push(value)
                 });
               });

@@ -16,7 +16,7 @@ class LikeController extends Controller
                                 UserRepositoryInteface $userRepository,
                                 PostRepositoryInterface $postRepository)
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
         $this->likeRepository = $likeRepository;
         $this->userRepository = $userRepository;
         $this->postRepository = $postRepository;
@@ -46,6 +46,9 @@ class LikeController extends Controller
           'post_id' => $id
         ];
 
-        return $this->likeRepository->store($array);
+        if($this->likeRepository->store($array))
+        {
+          return redirect()->back();
+        }
     }
 }

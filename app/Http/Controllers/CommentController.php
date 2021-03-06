@@ -14,7 +14,7 @@ class CommentController extends Controller
     public function __construct(CommentRepositoryInterface $commentRepository, 
                                 PostRepositoryInterface $postRepository)
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
       $this->commentRepository = $commentRepository;
       $this->postRepository = $postRepository;
     }
@@ -34,9 +34,12 @@ class CommentController extends Controller
     {
         $array = [
           'post_id' => $postId,
-          'content' => $request->content
+          'content' => $request->content_comment
         ];
 
-        return $this->commentRepository->store($array);
+        if($this->commentRepository->store($array))
+        {
+          return redirect()->back();
+        }
     }
 }

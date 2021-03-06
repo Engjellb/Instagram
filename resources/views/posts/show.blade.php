@@ -10,21 +10,21 @@
                 <div class="d-flex align-items-center">
                     <img src="{{ $post->user->profile->profileImage() }}"
                          class="rounded-circle pr-2" style="max-width: 50px" alt="">
-                    <a href="{{ route('profile.index', $post->user->id) }}"><h4 class="font-weight-bold pr-2">
-                        {{ $post->user->username }}</h4></a>
+                    <a href="{{ route('profile.index', $postUser->id) }}"><h4 class="font-weight-bold pr-2">
+                        {{ $postUser->username }}</h4></a>
                 </div>
                 <div class="mt-4">
-                    <a href="{{ route('profile.index', $post->user->id) }}"><span class="font-weight-bold pr-2">
-                        {{ $post->user->username }}</span></a>
+                    <a href="{{ route('profile.index', $postUser->id) }}"><span class="font-weight-bold pr-2">
+                        {{ $postUser->username }}</span></a>
                     <span>{{ $post->content }}</span><br>
                     <div style="cursor: pointer; margin-top: 10px; display: inline-block">
                         <form action="{{ route('posts.likes.store', $post->id) }}" method="post">
                             @csrf
-                            <like-post user-id="{{ $user->id }}" post-id="{{ $post->id }}"></like-post>
+                            <like-post user-id="{{ $postUser->id }}" post-id="{{ $post->id }}"></like-post>
                         </form>
                     </div>
                     <span style="margin-left: 8px">
-                        <span>{{ $post->likes->count() }}</span>
+                        <span>{{ $postLikes->count() }}</span>
                     </span>
                     <div style="margin-top: 30px;">
                         <span>Add a comment</span>

@@ -25,23 +25,29 @@ class PostController extends Controller
       return view('posts.create');
     }
 
-    public function store(ProfileValidation $request) 
+    public function store(Request $request) 
     {
       $imagePath = $request->file('upload')->store('images', 'public');
       $image = Image::make(public_path('storage/'.$imagePath))->fit(800,800);
       $image->save();
+      
+      $array = [
+        'content' => $request->desc,
+        'image' => $imagePath,
+      ];
 
-      $this->postRepository->store($request->all());
-      $user = $this->userRepository->getUserId();
+      $this->postRepository->store($array);
+      $userId = $this->userRepository->getCurrentUserId();
 
-      return redirect()->route('profile.index', $user);
+      return redirect()->route('profile.index', $userId);
     }
 
     public function show($id) 
     {
         $post = $this->postRepository->getPost($id);
-        $user = $this->userRepository->getUserId();
-
-        return view('posts.show', ['post' => $post, 'user' => $user]);
+        $postUser = $this->postRepository->getPostUser($id);
+        $postLikes = $this->postRepository->getPostLikes($id);
+        
+        return view('posts.show', ['post' => $post, 'postUser' => $postUser, 'postLikes' => $postLikes]);
     }
 }

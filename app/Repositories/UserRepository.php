@@ -12,9 +12,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInteface {
     parent::__construct($user);
   }
 
-  public function getUserId()
+  public function getCurrentUserId()
   {
-    return 1;
+    return Auth::id();
   }
 
   public function getUser($id)
@@ -24,17 +24,22 @@ class UserRepository extends BaseRepository implements UserRepositoryInteface {
 
   public function getCurrentUser()
   {
-    return Auth::user();
+    return $this->findById(Auth::id());
   }
 
   public function userContainsFollow($userId)
   {
-    return $this->findById(Auth::id())->following()->contains($userId);
+    return $this->getCurrentUser()->following->contains($userId);
   }
 
   public function userToggleFollowing($userProfile)
   {
-    return $this->findById(Auth::id())->following()->toggle($userProfile);
+    return $this->getCurrentUser()->following()->toggle($userProfile);
+  }
+
+  public function userPluckFollowing()
+  {
+    return $this->getCurrentUser()->following()->pluck('profiles.user_id');;
   }
  
   public function getUserProfile($userId)

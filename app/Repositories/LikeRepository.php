@@ -16,6 +16,6 @@ class LikeRepository extends BaseRepository implements LikeRepositoryInterface{
 
   public function store($array)
   {
-    return $this->getUser()->likes()->create($array);
+    return $this->getCurrentUser()->likes()->create($array);
   }
 }

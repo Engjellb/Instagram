@@ -15,7 +15,7 @@ class ProfileRepository extends BaseRepository implements ProfileRepositoryInter
 
   public function update($array)
   {
-    return $this->getUser()->profile()->update($array);
+    return $this->getCurrentUser()->profile()->update($array);
   }
 
   public function getProfileFollowers($userId)

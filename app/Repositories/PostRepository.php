@@ -4,7 +4,8 @@ namespace App\Repositories;
 
 use App\Post;
 
-class PostRepository extends BaseRepository implements PostRepositoryInterface {
+class PostRepository extends BaseRepository implements PostRepositoryInterface
+{
 
   use UserOwner;
 
@@ -15,12 +16,24 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface {
 
   public function store($array)
   {
-    return $this->getUser()->posts()->create($array);
+    return $this->getCurrentUser()->posts()->create($array);
   }
 
   public function getPost($id)
   {
     return $this->findById($id);
+  }
+
+  public function getPostUser($postId)
+  {
+    $post = $this->findById($postId);
+
+    return $post->user;
+  }
+
+  public function getPostUserProfile($postId)
+  {
+    return $this->getPostUser($postId)->profile;
   }
 
   public function getPostLikes($postId)
@@ -35,5 +48,10 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface {
     $post = $this->findById($postId);
 
     return $post->comments;
+  }
+
+  public function getUserFollowingPosts($profileUserId)
+  {
+    return $this->model->whereIn('user_id', $profileUserId)->orderBy('created_at', 'DESC')->get();
   }
 }

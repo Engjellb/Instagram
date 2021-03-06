@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileValidation;
 use App\Repositories\ProfileRepositoryInterface;
 use App\Repositories\UserRepositoryInteface;
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
@@ -18,6 +15,7 @@ class ProfileController extends Controller
     public function __construct(ProfileRepositoryInterface $profileRepository,
                                 UserRepositoryInteface $userRepository)
     {
+      $this->middleware('auth');
       $this->profileRepository = $profileRepository;
       $this->userRepository = $userRepository;
     }
@@ -26,12 +24,13 @@ class ProfileController extends Controller
 
       $userPosts = $this->userRepository->getUserPosts($userId);
       $user = $this->userRepository->getUser($userId);
+      $profile = $this->userRepository->getUserProfile($userId);
 
       $data = [];
 
       $data['posts'] = $userPosts;
 
-      $data['profile'] = $this->userRepository->getUserProfile($userId);
+      $data['profile'] = $profile;
 
       $data['follows'] = $this->userRepository->getCurrentUser() ? $this->userRepository->userContainsFollow($userId) : false;
 
@@ -41,35 +40,41 @@ class ProfileController extends Controller
 
       $data['followers'] = $this->profileRepository->getProfileFollowers($userId)->count();
 
-      return view('profiles.index', compact(['data', 'user']));
+      return view('profiles.index', compact(['data', 'user', 'profile']));
     }
 
-    public function edit(User $user) {
-        $this->authorize('update', $user->profile);
+    public function edit($userId) {
+      
+      $userProfile = $this->userRepository->getUserProfile($userId);
+      $user = $this->userRepository->getUser($userId);
 
-        return view('profiles.edit', ['user' => $user]);
+      $this->authorize('update', $userProfile);
+
+      return view('profiles.edit', ['user' => $user, 'userProfile' => $userProfile]);
     }
 
-    public function update($userId, Request $request) {
+    public function update(ProfileValidation $request, $userId) {
+
+      $profileData = [
+        'description' => $request->description,
+        'title' => $request->title,
+        'url' => $request->url,
+        'image' => $request->image
+      ];
       
       $userProfile = $this->userRepository->getUserProfile($userId);
 
       $this->authorize('update', $userProfile);
 
-        // if($request->hasFile('upload')) {
-        //     $imagePath = $request->file('upload')->store('profiles', 'public');
-        //     $image = Image::make(public_path('storage/'.$imagePath))->fit(500,500);
-        //     $image->save();
-        // }
-        return $this->profileRepository->update($request->all());
+      if($request->hasFile('image')) {
+          $imagePath = $request->file('image')->store('profiles', 'public');
+          $image = Image::make(public_path('storage/'.$imagePath))->fit(500,500);
+          $image->save();
+      }
 
-        // $user->profile()->update([
-        //     'title' => $request->input('title'),
-        //     'description' => $request->input('desc'),
-        //     'url' => $request->input('url'),
-        //     'image' => $imagePath ?? $user->profile->image
-        // ]);
-
-        // return redirect()->route('profile.index', $user->id);
+      if($this->profileRepository->update($profileData))
+      {
+        return redirect()->route('profile.index', $userId);
+      }
     }
 }

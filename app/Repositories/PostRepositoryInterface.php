@@ -11,7 +11,13 @@ interface PostRepositoryInterface {
 
   public function getPost($id);
 
+  public function getPostUser($postId);
+
+  public function getPostUserProfile($postId);
+
   public function getPostLikes($postId);
 
   public function getPostComments($postId);
+
+  public function getUserFollowingPosts($profileUserId);
 }

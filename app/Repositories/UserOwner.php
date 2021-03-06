@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 trait UserOwner {
 
-  public function getUser()
+  public function getCurrentUser()
   {
-    return User::findOrFail(2);
+    return User::findOrFail(Auth::id());
   }
 }

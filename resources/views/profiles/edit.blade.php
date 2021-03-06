@@ -9,13 +9,13 @@
                    @method('PUT')
 
                    <label for="title">Title</label>
-                   <input type="text" class="form-control" name="title" id="title" value="{{ $user->profile->title }}">
+                   <input type="text" class="form-control" name="title" id="title" value="{{ $userProfile->title }}">
                    <label for="desc">Description</label>
-                   <input type="text" class="form-control" name="desc" id="desc" value="{{ $user->profile->description }}">
+                   <input type="text" class="form-control" name="description" id="desc" value="{{ $userProfile->description }}">
                    <label for="url">Url</label>
-                   <input type="text" class="form-control" name="url" id="url" value="{{ $user->profile->url }}">
+                   <input type="text" class="form-control" name="url" id="url" value="{{ $userProfile->url }}">
                    <label for="image">Image</label>
-                   <input type="file" class="form-control-file" name="upload" id="image">
+                  <input type="file" class="form-control-file" name="image" id="image">
                    <br>
                    <input type="submit" value="Edit" class="btn btn-primary">
                </form>

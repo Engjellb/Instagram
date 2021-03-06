@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Repositories\PostRepositoryInterface;
+use App\Repositories\UserRepositoryInteface;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +16,15 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $userRepository;
+    private $postRepository;
+
+    public function __construct(UserRepositoryInteface $userRepository,
+                                PostRepositoryInterface $postRepository)
     {
-        $this->middleware(['auth']);
+        // $this->middleware(['auth']);
+        $this->userRepository = $userRepository;
+        $this->postRepository = $postRepository;
     }
 
     /**
@@ -26,22 +34,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $profiles = Auth::user()->following()->pluck('profiles.user_id');
-        $posts = Post::whereIn('user_id', $profiles)->orderBy('created_at', 'DESC')->get();
+        $profilesUserId = $this->userRepository->userPluckFollowing();
+        $posts = $this->postRepository->getUserFollowingPosts($profilesUserId);
+
         return view('home', ['posts' => $posts]);
     }
 
-    public function test()
+    public function test($id)
     {
-      $post = Post::find(4);
-      foreach ($post->likes as $like) {
-        $users[] = User::find($like->user_id);
-      }
-      
-      foreach ($users as $user) {
-        $profile[] = $user->profile;
-      }
-
-      dd($profile);
+      // return 'ok';
+      return $this->userRepository->userContainsFollow($id);
     }
 }

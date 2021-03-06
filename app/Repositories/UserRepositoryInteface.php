@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 interface UserRepositoryInteface {
   
-  public function getUserId();
+  public function getCurrentUserId();
 
   public function getUser($id);
 
@@ -13,6 +13,8 @@ interface UserRepositoryInteface {
   public function userContainsFollow($userId);
 
   public function userToggleFollowing($userProfile);
+
+  public function userPluckFollowing();
 
   public function getUserProfile($userId);
 

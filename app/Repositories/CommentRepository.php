@@ -16,7 +16,7 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
 
   public function store($array)
   {
-    return $this->getUser()->comments()->create($array);
+    return $this->getCurrentUser()->comments()->create($array);
   }
 
   public function getUserComment($comment)

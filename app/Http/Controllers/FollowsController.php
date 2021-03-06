@@ -21,6 +21,6 @@ class FollowsController extends Controller
     {
         $userProfile = $this->userRepository->getUserProfile($userId);
 
-        $this->userRepository->userToggleFollowing($userProfile);
+        return $this->userRepository->userToggleFollowing($userProfile);
     }
 }
