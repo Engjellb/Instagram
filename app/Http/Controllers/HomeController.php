@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
 use App\Repositories\PostRepositoryInterface;
 use App\Repositories\UserRepositoryInteface;
-use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {

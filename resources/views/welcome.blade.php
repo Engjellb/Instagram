@@ -2,22 +2,12 @@
 
 @section('content')
 <div class="content">
-    @foreach ($userProfiles as $userProfile)
-      @foreach($userProfile->posts as $post)
-        <div>
-          <div>
-            <span style="position: relative;right: 148px;"><a href="{{ route('profile.index', $userProfile->id) }}">{{ $userProfile->username }}</a></span>
-          </div>
-          <div>
-            <a href="{{ route('posts.show', $post->id) }}"><img src="/storage/{{ $post->image }}" alt="" style="width: 30%"></a>
-          </div>
-          <div style="margin-bottom: 100px">
-            <open-modal post-id="{{ $post->id }}" 
-              count-likes="{{ $post->likes->count() > 0 ? $post->likes->count() : 0 }}"
-              count-comments="{{ $post->comments->count() > 0 ? $post->comments->count() : 0}}"></open-modal>
-          </div>    
-        </div>
-      @endforeach  
-    @endforeach
+  <div class="jumbotron">
+    <h1 class="display-4">Instagram App</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="my-4">
+    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  </div>
 </div>
 @endsection

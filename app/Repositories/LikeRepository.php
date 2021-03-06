@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Like;
-use App\Post;
 
 class LikeRepository extends BaseRepository implements LikeRepositoryInterface{
   

@@ -12,6 +12,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInteface {
     parent::__construct($user);
   }
 
+  public function create($array)
+  {
+    return $this->model->create($array);
+  }
+
   public function getCurrentUserId()
   {
     return Auth::id();

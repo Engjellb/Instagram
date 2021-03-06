@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 interface UserRepositoryInteface {
+
+  public function create($array);
   
   public function getCurrentUserId();
 

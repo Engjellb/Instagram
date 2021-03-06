@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileValidation;
 use Illuminate\Http\Request;
 use App\Repositories\PostRepositoryInterface;
 use App\Repositories\UserRepositoryInteface;
