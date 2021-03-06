@@ -30,9 +30,17 @@ Generate a new application key
 
     php artisan key:generate
 
+Make assets accessible from the web
+
+    php artisan storage:link
+
 Run the database migrations (**Set the database connection in .env before migrating**)
 
     php artisan migrate
+
+Seed users table with two accounts
+
+    php artisan db:seed
 
 Start the local development server
 
